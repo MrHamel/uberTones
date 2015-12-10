@@ -32,6 +32,8 @@
  */
 
 
+
+var initialTone = new Audio("http://noc.internal.quadranet.com/joe/uberTones/mp3/ubt_1_nice_01.mp3");
 window.setInterval( function() {
 
     var userName = "null",
@@ -52,18 +54,55 @@ window.setInterval( function() {
             var thisTktColList = tktList[tktRow].getElementsByTagName('td');
 
             //TODO: Check ticket ownership against a list of users and don't notify for their tickets
-            if(thisTktColList[9].textContent.match(ticketOwner) != null){
-                //console.log("Ticket: " + tktList[tktRow].id + " has been assigned to " + ticketOwner + ", ignoring.");
+            if(thisTktColList[9].textContent.match(ticketOwner) != null) {
             } else {
+                var ticketTypeText = thisTktColList[5].getElementsByTagName("img")[0].title,
+                    ttType = ticketTypeText.toLowerCase();
+                if(ttType === "staff followup") {
+                    var tktTimeContext = thisTktColList[5].querySelector("label").textContent;
+                    var secs,
+                        mins,
+                        hrs;
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(hours)/i)) {
+                        if("staff" + tktTimeContext.match(/(\d{1,2})(\s)(hours)/i)[1] > 1) {
+                        }
+                    }
+                }
+                if(ttType === "client followup"){
+                    tktTimeContext = thisTktColList[5].querySelector("label").textContent;
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(seconds)/i)) {
+                        secs = tktTimeContext.match(/(\d{1,2})(\s)(seconds)/i)[1];
+                        initialTone.play();
+                        console.log("client responded " + secs + " secs ago");
+                    }
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(minutes)/i)) {
+                        mins = tktTimeContext.match(/(\d{1,2})(\s)(minutes)/i)[1];
+                        initialTone.play();
+                        console.log("client responded " + mins + " mins ago");
+                    }
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(hours)/i)) {
+                        hrs = tktTimeContext.match(/(\d{1,2})(\s)(hours)/i)[1];
+                        console.log("client responded " + hrs + " hours ago");
+                    }
+                }
 
                 var updatedCol = thisTktColList[5];
                 if(updatedCol.textContent.match(/none/i)) {
-                    //tktList[tktRow].className = "someClass";
-                    //console.log("Ticket: " + tktList[tktRow].id + " matched.");
-
-                    // Grab the time from the 'opened' column, (this is only applicable when the 'updated' contains 'none')
-                    // conditional logic for these cases will be required and is forthcoming.
-                    console.log(thisTktColList[4].childNodes[0].textContent.match(/(\d{1,2})(\s)(minutes)/i)[1]);
+                    tktTimeContext = thisTktColList[4].querySelector("label").textContent;
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(seconds)/i)) {
+                        secs = tktTimeContext.match(/(\d{1,2})(\s)(seconds)/i)[1];
+                        initialTone.play();
+                        console.log("client requested " + secs + " secs ago");
+                    }
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(minutes)/i)) {
+                        mins = tktTimeContext.match(/(\d{1,2})(\s)(minutes)/i)[1];
+                        initialTone.play();
+                        console.log("client requested " + mins + " mins ago");
+                    }
+                    if(tktTimeContext.match(/(\d{1,2})(\s)(hours)/i)) {
+                        hrs = tktTimeContext.match(/(\d{1,2})(\s)(hours)/i)[1];
+                        console.log("client requested " + hrs + " hours ago");
+                    }
                 }
 
             }
@@ -72,4 +111,4 @@ window.setInterval( function() {
         }
     }
 
-}, 3000);
+}, 60000);
