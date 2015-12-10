@@ -31,9 +31,7 @@
  *
  */
 
-
-
-var initialTone = new Audio("http://noc.internal.quadranet.com/joe/uberTones/mp3/ubt_1_nice_01.mp3");
+var initialTone = new Audio("https://raw.githubusercontent.com/Node0/uberTones/master/tones/ubt_1_nice_01.mp3");
 window.setInterval( function() {
 
     var userName = "null",
